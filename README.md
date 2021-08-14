@@ -8,6 +8,8 @@ You just have to configure the config.config file and the launcher.bat file
 
 ![image](https://user-images.githubusercontent.com/3610768/129456979-6022e4ee-456c-477a-9d17-2c225afa899b.png)
 
+![image](https://user-images.githubusercontent.com/3610768/129457466-7a00888e-eb32-4044-9530-6131a40e9cb2.png)
+
 
 # What does?
 * Create the SteamCMD folder
