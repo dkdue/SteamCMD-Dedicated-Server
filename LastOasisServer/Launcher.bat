@@ -5,11 +5,12 @@
 :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 :Config_SteamCMD
 set appid=920720
-set login=anonymous or your steam user and password
+set login=anonymous or your credentials user password
 set steamcmd_path=C:\Servers\LastOasis\SteamCMD\steamcmd.exe
 set steamcmd_dir=C:\Servers\LastOasis\SteamCMD
 set install_server=C:\Servers\lastOasis
 set server_exe=MistServer.exe
+set command_line=-log -force_steamclient_link -messaging -NoLiveServer -EnableCheats -backendapiurloverride="backend.last-oasis.com" -identifier=Tutorial -port=5555 -QueryPort=27015 -slots=25 -CustomerKey=qNw0DZgGBar3JGBy -ProviderKey=eRTbfOGgGbX2MKZe -OverrideConnectionAddress=%NetworkIP%
 :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 :IP
@@ -77,8 +78,7 @@ echo (%time%) Comprobando Actualizaciones del Servidor...
 start /wait %steamcmd_path% +login %login% +force_install_dir %install_server% +app_update %appid% +quit
 
 echo (%time%) Servidor Iniciado...
-start /wait %install_server%\%server_exe% log -force_steamclient_link -messaging -NoLiveServer -EnableCheats -backendapiurloverride="backend.last-oasis.com" -identifier=Tutorial -port=5555 -QueryPort=27015 -slots=25 -CustomerKey=qNw0DZgGBar3JGBy -ProviderKey=eRTbfOGgGbX2MKZe -OverrideConnectionAddress=%NetworkIP%
-
+start /wait %install_server%\%server_exe% %command_line%
 
 
 :Crash_Server
