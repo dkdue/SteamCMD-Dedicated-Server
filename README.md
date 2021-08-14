@@ -1,20 +1,16 @@
 # SteamCMD-Dedicated-Server
-Aplicación por lotes dedicada a simplificar la creación de servidores de steam
+Batch application dedicated to simplifying steam server creation
 
-# Que hace?
-* Crea la carpeta de SteamCMD
-* Verifica si existe la carpeta de SteamCMD
-* Descarga la aplicación SteamCMD.zip y lo descomprime
-* Instala SteamCMD
-* Ejecuta el servidor previamente configurado
-* Tiene un watchdog que ejecuta el servidor en caso de actualización o de crasheo
-* Tiene un autoactualizador, cada 15 min busca nuevas actualizaciones
-
-# Se busca
-Yo no soy programador pero llevo mucho tiempo haciendo esta aplicación,
-estará muy desordenado el código y habrán errores, pero es funcional,
-se podría mejorar y crear una herramienta mucho más completa, 
-espero que os animéis y os espero en Discord.
+# What does?
+Create the SteamCMD folder
+Check if the SteamCMD folder exists
+Download the SteamCMD.zip application and unzip it
+Install SteamCMD
+Run the previously configured server
+It has a watchdog that runs the server in case of update or crash
+It has an auto-update, every 15 min it checks for new updates
+# Wanted
+I am not a programmer but I have been making this application for a long time, the code will be very messy and there will be errors, but it is functional, it could be improved and create a much more complete tool, I hope you will cheer up and I wait for you on Discord.
 
 # Discord 
 https://discord.gg/dpY2xtwPsN
