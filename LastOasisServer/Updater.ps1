@@ -30,7 +30,7 @@ Start-Sleep -Seconds 1.5
 
 Function Stop-Server {
     #Envía Ctrl + C a la ventana del server, que guarda el servidor primero y se apaga limpiamente
-    $Process = get-process MistServer -ErrorAction SilentlyContinue
+    $Process = get-process $($config.gameserver) -ErrorAction SilentlyContinue
     if ($Process){
         # asegúrese de configurar $ProcessID correctamente. El envío de la señal CTRL_C_EVENT puede interrumpir o terminar un proceso
         $ProcessID = $Process.Id
