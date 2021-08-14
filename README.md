@@ -1,6 +1,9 @@
 # SteamCMD-Dedicated-Server
 Batch application dedicated to simplifying steam server creation
 
+# Inslation
+You just have to configure the config.config file and the launcher.bat file
+
 # What does?
 * Create the SteamCMD folder
 * Check if the SteamCMD folder exists
