@@ -1,7 +1,13 @@
 # SteamCMD-Dedicated-Server
 Batch application dedicated to simplifying steam server creation
 
-# Inslation
+# Requirements
+
+Powershell 5.1.22000.65
+![image](https://user-images.githubusercontent.com/3610768/129491528-ff77e0fb-f272-4793-9fb2-25f0725fe2cf.png)
+
+
+# installation
 You just have to configure the config.config file and the launcher.bat file
 
 ![image](https://user-images.githubusercontent.com/3610768/129454747-99f624ce-4e02-4e86-8494-97bbba22991c.png)
