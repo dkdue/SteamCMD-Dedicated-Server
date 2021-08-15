@@ -44,7 +44,8 @@ Function Stop-Server {
         AttachConsole(p);
         GenerateConsoleCtrlEvent(0, 0);
         }';
-        Foreach($id in $ProcessID){[w.k]::SendCtrlC($ProcessID)}")) start-process powershell.exe -argument "-nologo -noprofile -executionpolicy bypass -EncodedCommand $encodedCommand"
+        Foreach($id in $ProcessID){[w.k]::SendCtrlC($ProcessID)}")) 
+	start-process powershell.exe -argument "-nologo -noprofile -executionpolicy bypass -EncodedCommand $encodedCommand"
 
     } else {
         write-host "ningun proceso encontrado, no termina nada"
