@@ -31,11 +31,20 @@ Start-Sleep -Seconds 1.5
 Function Stop-Server {
     #Envía Ctrl + C a la ventana del server, que guarda el servidor primero y se apaga limpiamente
     $Process = get-process $($config.gameserver) -ErrorAction SilentlyContinue
-    if ($Process){
+     if ($Process){
         # asegúrese de configurar $ProcessID correctamente. El envío de la señal CTRL_C_EVENT puede interrumpir o terminar un proceso
         $ProcessID = $Process.Id
-        $encodedCommand = [Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes("Add-Type -Names 'w' -Name 'k' -M '[DllImport(""kernel32.dll"")]public static extern bool FreeConsole();[DllImport(""kernel32.dll"")]public static extern bool AttachConsole(uint p);[DllImport(""kernel32.dll"")]public static extern bool SetConsoleCtrlHandler(uint h, bool a);[DllImport(""kernel32.dll"")]public static extern bool GenerateConsoleCtrlEvent(uint e, uint p);public static void SendCtrlC(uint p){FreeConsole();AttachConsole(p);GenerateConsoleCtrlEvent(0, 0);}';[w.k]::SendCtrlC($ProcessID)"))
-        start-process powershell.exe -argument "-nologo -noprofile -executionpolicy bypass -EncodedCommand $encodedCommand"
+        $encodedCommand = [Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes("Add-Type -Names 'w' -Name 'k' -M '
+        [DllImport(""kernel32.dll"")]public static extern bool FreeConsole();
+        [DllImport(""kernel32.dll"")]public static extern bool AttachConsole(uint p);
+        [DllImport(""kernel32.dll"")]public static extern bool SetConsoleCtrlHandler(uint h, bool a);
+        [DllImport(""kernel32.dll"")]public static extern bool GenerateConsoleCtrlEvent(uint e, uint p);
+        public static void SendCtrlC(uint p){
+        FreeConsole();
+        AttachConsole(p);
+        GenerateConsoleCtrlEvent(0, 0);
+        }';
+        Foreach($id in $ProcessID){[w.k]::SendCtrlC($ProcessID)}")) start-process powershell.exe -argument "-nologo -noprofile -executionpolicy bypass -EncodedCommand $encodedCommand"
 
     } else {
         write-host "ningun proceso encontrado, no termina nada"
