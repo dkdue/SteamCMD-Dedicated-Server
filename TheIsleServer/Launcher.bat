@@ -10,6 +10,7 @@ set steamcmd_path=C:\Servers\TheIsle\SteamCMD\steamcmd.exe
 set steamcmd_dir=C:\Servers\TheIsle\SteamCMD
 set install_server=C:\Servers\TheIsle
 set server_exe=TheIsleServer.exe
+set command_line= Change Line 76
 :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 :IP
@@ -72,17 +73,10 @@ echo (%time%) Comprobando Actualizaciones del Servidor...
 start /wait %steamcmd_path% +login %login% +force_install_dir %install_server% +app_update %appid% +quit
 
 echo (%time%) Servidor Iniciado...
-start /wait %install_server%\%server_exe% MultiHome=%NetworkIP%?Port=7777?QueryPort=7778 -nosteamclient -game -server -log | set /P "="
+start /wait %install_server%\%server_exe% MultiHome=%NetworkIP%?Port=7777?QueryPort=7778 -log | set /P "="
 
 
 :Crash_Server
 echo (%time%) PELIGRO!: El Servidor ha cerrado por Actualizacion o ha crasheado, Reiniciando en 10 Segundos.
 timeout /t 10
 goto Initial_Server
-
-
-
-
-
-
-
