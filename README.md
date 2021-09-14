@@ -10,11 +10,10 @@ Powershell 5.1.22000.65
 # installation
 You just have to configure the config.config file and the launcher.bat file
 
-![image](https://user-images.githubusercontent.com/3610768/129454747-99f624ce-4e02-4e86-8494-97bbba22991c.png)
+![image](https://user-images.githubusercontent.com/3610768/133319981-78c906fb-5822-4d48-b320-f2e973b6f012.png)
 
-![image](https://user-images.githubusercontent.com/3610768/129456979-6022e4ee-456c-477a-9d17-2c225afa899b.png)
+![image](https://user-images.githubusercontent.com/3610768/133320074-2c2a5a34-f996-4a36-a956-f5440e96daa4.png)
 
-![image](https://user-images.githubusercontent.com/3610768/129457466-7a00888e-eb32-4044-9530-6131a40e9cb2.png)
 
 
 # What does?
