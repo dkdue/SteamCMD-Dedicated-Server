@@ -139,7 +139,7 @@ do{
     #This will start Server after patching, and even if it's not patched but crashed for some reason
     Start-Server
     #Will run every 5 minutes (300 seconds)
-    Start-Sleep -Seconds 300
+    Start-Sleep -Seconds 900
 } while ($stop)
 ########################################################################################################################################################
 ########################################################################################################################################################
