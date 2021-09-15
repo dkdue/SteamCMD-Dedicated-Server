@@ -130,7 +130,7 @@ do{
     Start-Server
     #Will run every 5 minutes (300 seconds)
     #Start-Sleep -Seconds 900
-$x = 1*60
+$x = 15*60
 $length = $x / 100
 while($x -gt 0) {
   $min = [int](([string]($x/60)).split('.')[0])
