@@ -1,7 +1,5 @@
-$Config = Get-Content "C:\SteamCMD\server.config" | convertfrom-json
+$Config = Get-Content ".\server.config" | convertfrom-json
 $host.UI.RawUI.WindowTitle = "SteamCMD Dedicated Server ..:: $($config.servername) ::.."
-Write-Host "SteamCMD Dedicated Server ..:: $($config.servername) ::.." -ForegroundColor DarkGreen -BackgroundColor Black
-write-host "-------------------------------"
 Start-Sleep -Seconds 1.5
 ######### - Space reserved so as not to collapse the counter with the title of the server
 write-host
@@ -10,8 +8,10 @@ write-host
 write-host
 write-host
 write-host
+write-host
+write-host
 ########## - Space reserved so as not to collapse the counter with the title of the server
-powershell.exe  ".\Convertto-TextASCIIArt.ps1" -Online -Text "$($config.Title)" -FontColor Cyan -Fontname big              
+powershell.exe  ".\Convertto-TextASCIIArt.ps1" -Online -Text "$($config.Title)" -FontColor Cyan -Fontname big           
 ########################################################################################################################################################
 if (-not (Test-Path ".\SteamCMD")) {
 #Creating Server Folder
