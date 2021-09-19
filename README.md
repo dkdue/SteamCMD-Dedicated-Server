@@ -14,7 +14,7 @@ Example image with The Isle server:
 
 ![image](https://user-images.githubusercontent.com/3610768/133319981-78c906fb-5822-4d48-b320-f2e973b6f012.png)
 
-![image](https://user-images.githubusercontent.com/3610768/133320074-2c2a5a34-f996-4a36-a956-f5440e96daa4.png)
+![image](https://user-images.githubusercontent.com/3610768/133925708-1991e457-5910-4308-be8c-eb3f6acab06d.png)
 
 
 
