@@ -24,7 +24,7 @@ Example image with The Isle server:
 * Download the SteamCMD.zip application and unzip it
 * Install SteamCMD
 * Run the previously configured server
-* It has a watchdog that runs the server in case of update or crash
+* It has a watchdog that runs the server in case of update or crash ( Every 15 min )
 * It has an auto-update, every 15 min it checks for new updates
 # Wanted
 I am not a programmer but I have been making this application for a long time, the code will be very messy and there will be errors, but it is functional, it could be improved and create a much more complete tool, I hope you will cheer up and I wait for you on Discord.
