@@ -1,11 +1,11 @@
 # SteamCMD-Dedicated-Server
 Batch application dedicated to simplifying steam server creation
 <p align="center">
-  <img alt="GitHub release (latest by date including pre-releases)" src="https://img.shields.io/github/v/release/n0tic/SteamServerCreationTool?color=seagreen&include_prereleases">
+  <img alt="GitHub release (latest by date including pre-releases)" src="https://img.shields.io/github/v/release/dkdue/SteamCMD-Dedicated-Server?color=seagreen&include_prereleases">
   <img src="https://img.shields.io/badge/status-Beta-blue" />
-  <img alt="GitHub all releases" src="https://img.shields.io/github/downloads/n0tic/SteamServerCreationTool/total?color=orange&label=downloads">
-  <img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/n0tic/SteamServerCreationTool?color=crimson">
-  <img alt="Visitor Count" src="https://visitor-badge.glitch.me/badge?page_id=n0tic.SteamServerCreationTool">
+  <img alt="GitHub all releases" src="https://img.shields.io/github/downloads/dkdue/SteamCMD-Dedicated-Server/total?color=orange&label=downloads">
+  <img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/dkdue/SteamCMD-Dedicated-Server?color=crimson">
+  <img alt="Visitor Count" src="https://visitor-badge.glitch.me/badge?page_id=dkdue.SteamCMD-Dedicated-Server">
 </p>
 # Requirements
 
