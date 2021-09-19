@@ -7,6 +7,7 @@
   <img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/dkdue/SteamCMD-Dedicated-Server?color=crimson">
   <img alt="Visitor Count" src="https://visitor-badge.glitch.me/badge?page_id=dkdue.SteamCMD-Dedicated-Server">
 </p>
+
 # Requirements
 
 Powershell 5.1.22000.65
