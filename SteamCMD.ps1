@@ -1,8 +1,17 @@
 $Config = Get-Content "C:\SteamCMD\server.config" | convertfrom-json
-$host.UI.RawUI.WindowTitle = "SteamCMD Dedicated Server Watchdog"
-Write-Host "SteamCMD Dedicated Server" -ForegroundColor DarkGreen -BackgroundColor Black
+$host.UI.RawUI.WindowTitle = "SteamCMD Dedicated Server ..:: $($config.servername) ::.."
+Write-Host "SteamCMD Dedicated Server ..:: $($config.servername) ::.." -ForegroundColor DarkGreen -BackgroundColor Black
 write-host "-------------------------------"
 Start-Sleep -Seconds 1.5
+######### - Space reserved so as not to collapse the counter with the title of the server
+write-host
+write-host
+write-host
+write-host
+write-host
+write-host
+########## - Space reserved so as not to collapse the counter with the title of the server
+powershell.exe  ".\Convertto-TextASCIIArt.ps1" -Online -Text "$($config.Title)" -FontColor Cyan -Fontname big              
 ########################################################################################################################################################
 if (-not (Test-Path ".\SteamCMD")) {
 #Creating Server Folder
@@ -35,28 +44,19 @@ Write-Host "Installing The Server. This will take a WHILE..." -ForegroundColor Y
 powershell.exe "$Dir\SteamCMD\steamcmd.exe" +login anonymous +force_install_dir $($config.forceinstalldir) +app_update $($config.gameid) validate +exit 
 }
 ########################################################################################################################################################
-## Function for sending messages via Discord
-$debug = $false
-function SendDiscordMessage($message, $toAll = $true){
-    if(!$debug){
-        
-        if($toAll){
-            $message = "@everyone $message"
-        }
-        Invoke-RestMethod -Uri $($config.webHookUrl) -Body ([PSCustomObject]@{content = $message} | ConvertTo-Json -Depth 4) -Method Post -ContentType 'application/json'
-    }
-}
+
 Function Start-Server {
     #Starts the Server Server
     $Process = get-process $($config.PIDname) -ErrorAction SilentlyContinue
     if ($Process){
         write-host "Server is running.."
     }else {
-		SendDiscordMessage -message "**[START-SERVER]**`nStarting the server $($config.servername)..$(Get-Date)`nhttps://"
+		
         write-host "Starting the server $($config.servername).. "
 		Start-Process "$($config.forceinstalldir)\$($config.ExeName)" -ArgumentList "$($config.ArgumentList)" 
     }
 }
+
 Function Update-Server {
     #Starts updating the Server Server
     $Process = get-process $($config.PIDname) -ErrorAction SilentlyContinue
@@ -65,9 +65,10 @@ Function Update-Server {
     }else {
         Write-Host "Updating $($config.servername)"
         Start-Process "$($config.steamcmd)" -ArgumentList "+login anonymous +force_install_dir $($config.forceinstalldir) +app_update $($config.gameid) validate +exit" -wait
-		SendDiscordMessage -message "**[UPDATE-SERVER]**`nUpdating $($config.servername) done!`nhttps://"
+		
     }
 }
+
 Function Stop-Server {
     #Sends Ctrl+C to the Server window, which saves the server first and shuts down cleanly
     $Process = get-process $($config.PIDname) -ErrorAction SilentlyContinue
@@ -85,11 +86,11 @@ Function Stop-Server {
         }'
         Add-Type -Name 'dummyName' -Namespace 'dummyNamespace' -MemberDefinition $MemberDefinition
         [dummyNamespace.dummyName]::SendCtrlC($Process.ID)
-		SendDiscordMessage -message "**[STOP-SERVER]**`nStopping $($config.servername) done!`nhttps://"
     } else {
         write-host "no process found, not terminating anything"
     }
 }
+
 Function Get-ServerCurrentVersion {
     ((Get-Content "$($config.forceinstalldir)\steamapps\appmanifest_$($config.gameid).acf" | Where-Object {$_ -like "*buildid*"}).split('"').trim() | Where-Object {$_})[-1]
 }
@@ -130,6 +131,7 @@ do{
     Start-Server
     #Will run every 5 minutes (300 seconds)
     #Start-Sleep -Seconds 900
+	
 $x = 15*60
 $length = $x / 100
 while($x -gt 0) {
@@ -139,5 +141,6 @@ while($x -gt 0) {
   start-sleep -s 1
   $x--
 }
+
 } while ($stop)
 
