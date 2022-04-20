@@ -48,19 +48,19 @@ powershell.exe "$Dir\SteamCMD\steamcmd.exe" +login anonymous +force_install_dir 
 ########################################################################################################################################################
 
 Function Start-Server {
-    #Starts the Server Server
+    #Starts the Server
     $Process = get-process $($config.PIDname) -ErrorAction SilentlyContinue
     if ($Process){
-        write-host "Server is running.."
+        write-host "Server is running..."
     }else {
 		
-        write-host "Starting the server $($config.servername).. "
-		Start-Process "$($config.forceinstalldir)\$($config.ExeName)" -ArgumentList "$($config.ArgumentList)" 
+        write-host "Starting the server $($config.servername)... "
+		Start-Process "$($config.forceinstalldir)\$($config.Title)\Binaries\Win64\$($config.ExeName)" -ArgumentList "$($config.ArgumentList)" 
     }
 }
 
 Function Update-Server {
-    #Starts updating the Server Server
+    #Starts updating the Server
     $Process = get-process $($config.PIDname) -ErrorAction SilentlyContinue
     if ($Process){
         write-host "Stop the game server first: Stop-Server"
@@ -75,20 +75,14 @@ Function Stop-Server {
     #Sends Ctrl+C to the Server window, which saves the server first and shuts down cleanly
     $Process = get-process $($config.PIDname) -ErrorAction SilentlyContinue
     if ($Process){
-        $MemberDefinition = '
-        [DllImport("kernel32.dll")]public static extern bool FreeConsole();
-        [DllImport("kernel32.dll")]public static extern bool AttachConsole(uint p);
-        [DllImport("kernel32.dll")]public static extern bool GenerateConsoleCtrlEvent(uint e, uint p);
-        public static void SendCtrlC(uint p) {
-            FreeConsole();
-            AttachConsole(p);
-            GenerateConsoleCtrlEvent(0, p);
-            FreeConsole();
-            AttachConsole(uint.MaxValue);
-        }'
-        Add-Type -Name 'dummyName' -Namespace 'dummyNamespace' -MemberDefinition $MemberDefinition
-        [dummyNamespace.dummyName]::SendCtrlC($Process.ID)
-    } else {
+        # be sure to set $ProcessID properly. Sending CTRL_C_EVENT signal can disrupt or terminate a process
+        $ProcessID = $Process.Id
+        $encodedCommand = [Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes("Add-Type -Names 'w' -Name 'k' -M '[DllImport(""kernel32.dll"")]public static extern bool FreeConsole();[DllImport(""kernel32.dll"")]public static extern bool AttachConsole(uint p);[DllImport(""kernel32.dll"")]public static extern bool SetConsoleCtrlHandler(uint h, bool a);[DllImport(""kernel32.dll"")]public static extern bool GenerateConsoleCtrlEvent(uint e, uint p);public static void SendCtrlC(uint p){FreeConsole();AttachConsole(p);GenerateConsoleCtrlEvent(0, 0);}';[w.k]::SendCtrlC($ProcessID)"))
+        start-process powershell.exe -argument "-nologo -noprofile -executionpolicy bypass -EncodedCommand $encodedCommand"
+        write-host "Waiting for Process $($ProcessID) to stop"
+        Wait-Process -id $ProcessID		
+		
+	} else {
         write-host "No process found, not terminating anything"
     }
 }
@@ -106,7 +100,7 @@ Function Get-ServerLatestVersion {
     if ($Status -eq 'success') {
     Write-Host "Status: Success!" -ForegroundColor DarkGreen
     } else {
-    Write-Host "Error, unable to contact the Steam services. Trying again later.." -ForegroundColor Red    
+    Write-Host "Error, unable to contact the Steam services. Trying again later..." -ForegroundColor Red    
     }
 
 
@@ -121,7 +115,9 @@ do{
     $BuildID = Get-ServerLatestVersion
     $CurrentBuildID = Get-ServerCurrentVersion
     
-    if ($BuildID -ne $CurrentBuildID){
+    if ( ($BuildID -ne $CurrentBuildID) -and ($BuildID -ne "NotAvailable") ) {
+        #New version detected. Initiating patching
+        write-host "New version found. Stopping and updating $($config.PIDname)"
         #New version detected. Initiating patching
         Stop-Server
         Update-Server
@@ -132,9 +128,9 @@ do{
     #This will start Server after patching, and even if it's not patched but crashed for some reason
     Start-Server
     #Will run every 5 minutes (300 seconds)
-    #Start-Sleep -Seconds 900
+    #Start-Sleep -Seconds 300
 	
-$x = 15*60
+$x = 5*60
 $length = $x / 100
 while($x -gt 0) {
   $min = [int](([string]($x/60)).split('.')[0])
