@@ -11,7 +11,8 @@ write-host
 write-host
 write-host
 ########## - Space reserved so as not to collapse the counter with the title of the server
-powershell.exe Install-Module -Name WriteAscii -Scope CurrentUser
+write-host "Initializing the Server.... Please wait...."
+Install-Module -Name WriteAscii -Scope CurrentUser
 Write-Ascii -InputObject "$($config.Title)" -Fore Cyan          
 ########################################################################################################################################################
 if (-not (Test-Path ".\SteamCMD")) {
@@ -42,7 +43,7 @@ sleep -Seconds 5
 
 #Installing the Server
 Write-Host "Installing The Server. This will take a WHILE..." -ForegroundColor Yellow
-powershell.exe "$Dir\SteamCMD\steamcmd.exe" +login anonymous +force_install_dir $($config.forceinstalldir) +app_update $($config.gameid) validate +exit 
+powershell.exe "$Dir\SteamCMD\steamcmd.exe" +login anonymous +force_install_dir $($config.forceinstalldir) +app_update $($config.gameid) $($config.branches) validate +exit 
 }
 ########################################################################################################################################################
 
@@ -65,7 +66,7 @@ Function Update-Server {
         write-host "Stop the game server first: Stop-Server"
     }else {
         Write-Host "Updating $($config.servername)"
-        Start-Process "$($config.steamcmd)" -ArgumentList "+login anonymous +force_install_dir $($config.forceinstalldir) +app_update $($config.gameid) validate +exit" -wait
+        Start-Process "$($config.steamcmd)" -ArgumentList "+login anonymous +force_install_dir $($config.forceinstalldir) +app_update $($config.gameid) $($config.branches) validate +exit" -wait
 		
     }
 }
@@ -99,7 +100,7 @@ Function Get-ServerLatestVersion {
     Write-Host "Checking Steam API for latest version..."
     $Data = Invoke-WebRequest -Uri "https://api.steamcmd.net/v1/info/$($config.gameid)" -UseBasicParsing
     $json = $data.content | convertfrom-json
-    $BuildID = $json.data.$($config.gameid).depots.branches.public.buildid
+    $BuildID = $json.data.$($config.gameid).depots.branches.$($config.branches).buildid
     $Status = $json.status
     
     if ($Status -eq 'success') {
