@@ -55,7 +55,7 @@ Function Start-Server {
     }else {
 		
         write-host "Starting the server $($config.servername)... "
-		Start-Process "$($config.forceinstalldir)\$($config.Title)\Binaries\Win64\$($config.ExeName)" -ArgumentList "$($config.ArgumentList)" 
+		Start-Process "$($config.forceinstalldir)\$($config.Shipping)\$($config.ExeName)" -ArgumentList "$($config.ArgumentList)" 
     }
 }
 
