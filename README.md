@@ -19,7 +19,7 @@ You just have to configure the config.config file
 
 Example image with The Isle server:
 
-![image](https://user-images.githubusercontent.com/3610768/164279676-4b6f62bc-0703-4cef-9796-04e799eb54c3.png)
+![image](https://user-images.githubusercontent.com/3610768/164289847-b34217b2-01c6-4c38-a7dd-3213b3f077be.png)
 
 ![image](https://user-images.githubusercontent.com/3610768/164283077-3863cfc6-5010-4810-b99a-8c00d1036b64.png)
 
