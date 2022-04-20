@@ -89,7 +89,7 @@ Function Stop-Server {
         Add-Type -Name 'dummyName' -Namespace 'dummyNamespace' -MemberDefinition $MemberDefinition
         [dummyNamespace.dummyName]::SendCtrlC($Process.ID)
     } else {
-        write-host "no process found, not terminating anything"
+        write-host "No process found, not terminating anything"
     }
 }
 
