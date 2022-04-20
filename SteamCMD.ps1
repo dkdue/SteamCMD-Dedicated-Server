@@ -11,7 +11,8 @@ write-host
 write-host
 write-host
 ########## - Space reserved so as not to collapse the counter with the title of the server
-powershell.exe  ".\Convertto-TextASCIIArt.ps1" -Online -Text "$($config.Title)" -FontColor Cyan -Fontname big           
+powershell.exe Install-Module -Name WriteAscii -Scope CurrentUser
+Write-Ascii -InputObject "$($config.Title)" -Fore Cyan          
 ########################################################################################################################################################
 if (-not (Test-Path ".\SteamCMD")) {
 #Creating Server Folder
