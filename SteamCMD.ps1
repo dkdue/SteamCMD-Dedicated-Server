@@ -38,15 +38,14 @@ $SteamDestination = "$Dir\SteamCMD" #the path to extract the file to
 Remove-Item $Dir\SteamCMD\steamcmd.exe -ErrorAction SilentlyContinue #Just in cases this was alredy run once, I don´t want to flood the uers text
 Add-Type -assembly "system.io.compression.filesystem" #Required class to unzip the file
 [io.compression.zipfile]::ExtractToDirectory($SteamZip, $SteamDestination) #unzip the file
-}
-if (-not (Test-Path "$($config.forceinstalldir)")) {
+
 Write-Host "The Server is going to be installed to $Dir" -ForegroundColor Yellow
 Write-Host "Giving you 5 seconds to change your mind" -ForegroundColor Yellow
 sleep -Seconds 5
 
 #Installing the Server
 Write-Host "Installing The Server. This will take a WHILE..." -ForegroundColor Yellow
-powershell.exe "$Dir\SteamCMD\steamcmd.exe" +login anonymous +force_install_dir $($config.forceinstalldir) +app_update $($config.gameid) $($config.branches) validate +exit 
+powershell.exe /wait "$Dir\SteamCMD\steamcmd.exe" +login anonymous +force_install_dir $($config.forceinstalldir) +app_update $($config.gameid) $($config.branches) validate +exit 
 }
 ########################################################################################################################################################
 
@@ -75,9 +74,12 @@ Function Start-Server {
 		}
 		Invoke-RestMethod -Uri $webHookUrl -Body ($payload | ConvertTo-Json -Depth 4) -Method Post -ContentType 'application/json'
 		#Discord Alert
-		Start-Process "$($config.forceinstalldir)\$($config.Shipping)\$($config.ExeName)" -ArgumentList "$($config.ArgumentList)" 
+		Start-Process "$($config.forceinstalldir)\$($config.Win64)\$($config.ExeName)" -ArgumentList "$($config.ArgumentList)"
+		
+		
     }
 }
+	
 
 Function Update-Server {
     #Starts updating the Server
@@ -103,8 +105,7 @@ Function Update-Server {
 		}
 		Invoke-RestMethod -Uri $webHookUrl -Body ($payload | ConvertTo-Json -Depth 4) -Method Post -ContentType 'application/json'
 		#Discord Alert		
-        Start-Process "$($config.steamcmd)" -ArgumentList "+login anonymous +force_install_dir $($config.forceinstalldir) +app_update $($config.gameid) $($config.branches) validate +exit" -wait
-		
+        Start-Process "$($config.steamcmd)" "+login anonymous +force_install_dir $($config.forceinstalldir) +app_update $($config.gameid) $($config.branches) validate +exit" -wait
     }
 }
 
@@ -171,7 +172,7 @@ do{
     
     if ( ($BuildID -ne $CurrentBuildID) -and ($BuildID -ne "NotAvailable") ) {
         #New version detected. Initiating patching
-        write-host "New version found. Stopping in 10 min and updating $($config.PIDname)..."
+        write-host "New version found. Stopping in 10 min and updating $($config.servername)..."
 		#Discord Alert
 		$webHookUrl = "$($config.webHookUrl)"
 		[System.Collections.ArrayList]$embedArray = @()
@@ -189,9 +190,9 @@ do{
 		}
 		Invoke-RestMethod -Uri $webHookUrl -Body ($payload | ConvertTo-Json -Depth 4) -Method Post -ContentType 'application/json'
 		#Discord Alert
-		Start-Sleep -Seconds 600
+		timeout /t 600
 		
-		write-host "New version found. Stopping in 5 min and updating $($config.PIDname)..."
+		write-host "New version found. Stopping in 5 min and updating $($config.servername)..."
 		#Discord Alert
 		$webHookUrl = "$($config.webHookUrl)"
 		[System.Collections.ArrayList]$embedArray = @()
@@ -209,9 +210,9 @@ do{
 		}
 		Invoke-RestMethod -Uri $webHookUrl -Body ($payload | ConvertTo-Json -Depth 4) -Method Post -ContentType 'application/json'
 		#Discord Alert		
-		Start-Sleep -Seconds 300
+		timeout /t 240
 		
-		write-host "New version found. Stopping in 1 min and updating $($config.PIDname)..."
+		write-host "New version found. Stopping in 1 min and updating $($config.servername)..."
 		#Discord Alert
 		$webHookUrl = "$($config.webHookUrl)"
 		[System.Collections.ArrayList]$embedArray = @()
@@ -229,9 +230,9 @@ do{
 		}
 		Invoke-RestMethod -Uri $webHookUrl -Body ($payload | ConvertTo-Json -Depth 4) -Method Post -ContentType 'application/json'
 		#Discord Alert		
-		Start-Sleep -Seconds 60
+		timeout /t 60
 		
-		write-host "New version found. Stopping and updating $($config.PIDname) now..."
+		write-host "New version found. Stopping and updating $($config.servername) now..."
 		#Discord Alert
 		$webHookUrl = "$($config.webHookUrl)"
 		[System.Collections.ArrayList]$embedArray = @()
@@ -271,5 +272,5 @@ while($x -gt 0) {
   $x--
 }
 
-} while ($stop)
 
+} while ($stop)
