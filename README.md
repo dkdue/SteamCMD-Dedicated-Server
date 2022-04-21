@@ -28,13 +28,13 @@ Example image with The Isle server:
 
 
 # What does?
-* Create the SteamCMD folder
-* Check if the SteamCMD folder exists
-* Download the SteamCMD.zip application and unzip it
-* Install SteamCMD
-* Run the previously configured server
-* It has a watchdog that runs the server in case of update or crash ( Every 15 min )
-* It has an auto-update, every 15 min it checks for new updates
+* Create, check, download and install SteamCMD.
+* Run the server, previously configured.
+* It has a watchdog that runs the server in case of update or crash (Every 5 min)
+* It has automatic updating, every 5 min it checks for new updates.
+* Notify by discord when the server starts, stops, finds updates and when it installs the updates.
+* Notify by discord 4 times before closing the server and updating, 10,5,1 min and just when closing the server.
+
 # Wanted
 I am not a programmer but I have been making this application for a long time, the code will be very messy and there will be errors, but it is functional, it could be improved and create a much more complete tool, I hope you will cheer up and I wait for you on Discord.
 
