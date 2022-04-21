@@ -8,12 +8,6 @@
   <img alt="Visitor Count" src="https://visitor-badge.glitch.me/badge?page_id=dkdue.SteamCMD-Dedicated-Server">
 </p>
 
-# Requirements
-
-Powershell 5.1.22000.65
-![image](https://user-images.githubusercontent.com/3610768/129491528-ff77e0fb-f272-4793-9fb2-25f0725fe2cf.png)
-
-
 # installation
 You just have to configure the config.config file
 
