@@ -1,5 +1,6 @@
 $Config = Get-Content ".\server.config" | convertfrom-json
 $host.UI.RawUI.WindowTitle = "SteamCMD Dedicated Server ..:: $($config.servername) ::.."
+$ErrorActionPreference= 'silentlycontinue'
 Start-Sleep -Seconds 1.5
 ######### - Space reserved so as not to collapse the counter with the title of the server
 write-host
@@ -11,8 +12,9 @@ write-host
 write-host
 write-host
 ########## - Space reserved so as not to collapse the counter with the title of the server
-write-host "Initializing the Server.... Please wait...."
+write-host "Installing or Updating WriteAscii module...."
 Install-Module -Name WriteAscii -Scope CurrentUser
+write-host "Starting WriteAscii module...."
 Write-Ascii -InputObject "$($config.Title)" -Fore Cyan          
 ########################################################################################################################################################
 if (-not (Test-Path ".\SteamCMD")) {
@@ -36,7 +38,8 @@ $SteamDestination = "$Dir\SteamCMD" #the path to extract the file to
 Remove-Item $Dir\SteamCMD\steamcmd.exe -ErrorAction SilentlyContinue #Just in cases this was alredy run once, I don´t want to flood the uers text
 Add-Type -assembly "system.io.compression.filesystem" #Required class to unzip the file
 [io.compression.zipfile]::ExtractToDirectory($SteamZip, $SteamDestination) #unzip the file
-
+}
+if (-not (Test-Path "$($config.forceinstalldir)")) {
 Write-Host "The Server is going to be installed to $Dir" -ForegroundColor Yellow
 Write-Host "Giving you 5 seconds to change your mind" -ForegroundColor Yellow
 sleep -Seconds 5
@@ -55,6 +58,23 @@ Function Start-Server {
     }else {
 		
         write-host "Starting the server $($config.servername)... "
+		#Discord Alert
+		$webHookUrl = "$($config.webHookUrl)"
+		[System.Collections.ArrayList]$embedArray = @()
+		$color = '4289797'
+		$title = 'Server Status!'
+		$description = '@everyone Starting the server, Wait a few minutes until the server is completely online.'
+		$embedObject = [PSCustomObject]@{
+			color = $color
+			title = $title
+			description = $description
+		}
+		$embedArray.Add($embedObject)
+		$payload = [PSCustomObject]@{
+		embeds = $embedArray
+		}
+		Invoke-RestMethod -Uri $webHookUrl -Body ($payload | ConvertTo-Json -Depth 4) -Method Post -ContentType 'application/json'
+		#Discord Alert
 		Start-Process "$($config.forceinstalldir)\$($config.Shipping)\$($config.ExeName)" -ArgumentList "$($config.ArgumentList)" 
     }
 }
@@ -66,6 +86,23 @@ Function Update-Server {
         write-host "Stop the game server first: Stop-Server"
     }else {
         Write-Host "Updating $($config.servername)"
+		#Discord Alert
+		$webHookUrl = "$($config.webHookUrl)"
+		[System.Collections.ArrayList]$embedArray = @()
+		$color = '1065911'
+		$title = 'Server Status!'
+		$description = '@everyone Updating the server.'
+		$embedObject = [PSCustomObject]@{
+			color = $color
+			title = $title
+			description = $description
+		}
+		$embedArray.Add($embedObject)
+		$payload = [PSCustomObject]@{
+		embeds = $embedArray
+		}
+		Invoke-RestMethod -Uri $webHookUrl -Body ($payload | ConvertTo-Json -Depth 4) -Method Post -ContentType 'application/json'
+		#Discord Alert		
         Start-Process "$($config.steamcmd)" -ArgumentList "+login anonymous +force_install_dir $($config.forceinstalldir) +app_update $($config.gameid) $($config.branches) validate +exit" -wait
 		
     }
@@ -80,8 +117,25 @@ Function Stop-Server {
         $encodedCommand = [Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes("Add-Type -Names 'w' -Name 'k' -M '[DllImport(""kernel32.dll"")]public static extern bool FreeConsole();[DllImport(""kernel32.dll"")]public static extern bool AttachConsole(uint p);[DllImport(""kernel32.dll"")]public static extern bool SetConsoleCtrlHandler(uint h, bool a);[DllImport(""kernel32.dll"")]public static extern bool GenerateConsoleCtrlEvent(uint e, uint p);public static void SendCtrlC(uint p){FreeConsole();AttachConsole(p);GenerateConsoleCtrlEvent(0, 0);}';[w.k]::SendCtrlC($ProcessID)"))
         start-process powershell.exe -argument "-nologo -noprofile -executionpolicy bypass -EncodedCommand $encodedCommand"
         write-host "Waiting for Process $($ProcessID) to stop"
+		#Discord Alert
+		$webHookUrl = "$($config.webHookUrl)"
+		[System.Collections.ArrayList]$embedArray = @()
+		$color = '12534533'
+		$title = 'Server Status!'
+		$description = '@everyone Stoping the server.'
+		$embedObject = [PSCustomObject]@{
+			color = $color
+			title = $title
+			description = $description
+		}
+		$embedArray.Add($embedObject)
+		$payload = [PSCustomObject]@{
+		embeds = $embedArray
+		}
+		Invoke-RestMethod -Uri $webHookUrl -Body ($payload | ConvertTo-Json -Depth 4) -Method Post -ContentType 'application/json'
+		#Discord Alert			
         Wait-Process -id $ProcessID		
-		
+
 	} else {
         write-host "No process found, not terminating anything"
     }
@@ -92,7 +146,7 @@ Function Get-ServerCurrentVersion {
 }
 Function Get-ServerLatestVersion {
     Write-Host "Checking Steam API for latest version..."
-    $Data = Invoke-WebRequest -Uri "https://api.steamcmd.net/v1/info/$($config.gameid)" -UseBasicParsing
+    $Data = Invoke-WebRequest -Uri "https://api.steamcmd.net/v1/info/$($config.gameid)" -UseBasicParsing 
     $json = $data.content | convertfrom-json
     $BuildID = $json.data.$($config.gameid).depots.branches.$($config.branches).buildid
     $Status = $json.status
@@ -117,8 +171,85 @@ do{
     
     if ( ($BuildID -ne $CurrentBuildID) -and ($BuildID -ne "NotAvailable") ) {
         #New version detected. Initiating patching
-        write-host "New version found. Stopping and updating $($config.PIDname)"
-        #New version detected. Initiating patching
+        write-host "New version found. Stopping in 10 min and updating $($config.PIDname)..."
+		#Discord Alert
+		$webHookUrl = "$($config.webHookUrl)"
+		[System.Collections.ArrayList]$embedArray = @()
+		$color = '16768083'
+		$title = 'Server Status!'
+		$description = '@everyone New version found. Stopping in 10 min and updating...'
+		$embedObject = [PSCustomObject]@{
+			color = $color
+			title = $title
+			description = $description
+		}
+		$embedArray.Add($embedObject)
+		$payload = [PSCustomObject]@{
+		embeds = $embedArray
+		}
+		Invoke-RestMethod -Uri $webHookUrl -Body ($payload | ConvertTo-Json -Depth 4) -Method Post -ContentType 'application/json'
+		#Discord Alert
+		Start-Sleep -Seconds 600
+		
+		write-host "New version found. Stopping in 5 min and updating $($config.PIDname)..."
+		#Discord Alert
+		$webHookUrl = "$($config.webHookUrl)"
+		[System.Collections.ArrayList]$embedArray = @()
+		$color = '16768083'
+		$title = 'Server Status!'
+		$description = '@everyone New version found. Stopping in 5 min and updating...'
+		$embedObject = [PSCustomObject]@{
+			color = $color
+			title = $title
+			description = $description
+		}
+		$embedArray.Add($embedObject)
+		$payload = [PSCustomObject]@{
+		embeds = $embedArray
+		}
+		Invoke-RestMethod -Uri $webHookUrl -Body ($payload | ConvertTo-Json -Depth 4) -Method Post -ContentType 'application/json'
+		#Discord Alert		
+		Start-Sleep -Seconds 300
+		
+		write-host "New version found. Stopping in 1 min and updating $($config.PIDname)..."
+		#Discord Alert
+		$webHookUrl = "$($config.webHookUrl)"
+		[System.Collections.ArrayList]$embedArray = @()
+		$color = '16768083'
+		$title = 'Server Status!'
+		$description = '@everyone New version found. Stopping in 1 min and updating...'
+		$embedObject = [PSCustomObject]@{
+			color = $color
+			title = $title
+			description = $description
+		}
+		$embedArray.Add($embedObject)
+		$payload = [PSCustomObject]@{
+		embeds = $embedArray
+		}
+		Invoke-RestMethod -Uri $webHookUrl -Body ($payload | ConvertTo-Json -Depth 4) -Method Post -ContentType 'application/json'
+		#Discord Alert		
+		Start-Sleep -Seconds 60
+		
+		write-host "New version found. Stopping and updating $($config.PIDname) now..."
+		#Discord Alert
+		$webHookUrl = "$($config.webHookUrl)"
+		[System.Collections.ArrayList]$embedArray = @()
+		$color = '16768083'
+		$title = 'Server Status!'
+		$description = '@everyone New version found. Stopping and updating now...'
+		$embedObject = [PSCustomObject]@{
+			color = $color
+			title = $title
+			description = $description
+		}
+		$embedArray.Add($embedObject)
+		$payload = [PSCustomObject]@{
+		embeds = $embedArray
+		}
+		Invoke-RestMethod -Uri $webHookUrl -Body ($payload | ConvertTo-Json -Depth 4) -Method Post -ContentType 'application/json'
+		#Discord Alert		
+		
         Stop-Server
         Update-Server
     } else {
